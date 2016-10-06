@@ -1,0 +1,77 @@
+.container {
+    width: 55%;
+    margin: 3% auto;
+    margin-top:0px;
+    padding-top: 30px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    overflow: hidden;
+}
+
+.container table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.95);
+	background-color:gray;
+	background-origin: border-box;
+	background: rgba(0, 0, 0, 0.4);
+	box-sizing: border-box;
+}
+
+.container table tbody tr:hover {
+    background-color: #c0c0c0;
+    text-color: #000000;
+}
+
+.container table th{
+	padding: 10px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+	background-color:gray;
+	background-origin: border-box;
+	background: rgba(0, 0, 0, 0.5);
+	box-sizing: border-box;
+}
+
+.container table th:last-child{
+	border-left: 2px solid #ddd;
+}
+.container table td:NTH-CHILD(5){
+	border-left: 2px solid #ddd;
+}
+
+.container table td {
+    padding: 10px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color:white;
+    font-family:Courier New;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.container table th {
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    font-family:Courier New;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.container table a{
+	text-decoration: none;
+	color:white;
+}
+
+.container h1 {
+    padding: 12px 15px;
+    font-size: 1em;
+    margin: 0;
+    font-weight: normal;
+    color: white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color:gray;
+	background-origin: border-box;
+	background: rgba(0, 0, 0, 0.8);
+	box-sizing: border-box;
+}

@@ -26,9 +26,9 @@ public class UpdateUserServlet extends HttpServlet{
 		try {
 			UserService updateService = new UserService();
 			User user=updateService.getUserById(userId);
-			user.setUser_name(userName);
-			user.setUser_mail(userMail);
-			user.setUser_password(password);
+			user.setUserName(userName);
+			user.setUserMail(userMail);
+			user.setUserPassword(password);
 			boolean result = updateService.editUser(user);
 			out.println("<html>");
 			out.println("<head>");

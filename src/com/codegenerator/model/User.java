@@ -1,91 +1,101 @@
 package com.codegenerator.model;
 
-import java.io.Serializable;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-public class User implements Serializable{
+@Table(name="user",catalog="codegenerator",uniqueConstraints = @UniqueConstraint(columnNames="user_mail") )
+public class User  implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id_user")
-	private int id_user;
-	private String user_name;
-	private String user_password;
-	private String user_mail;
+     private Integer idUser;
+     private String userMail;
+     private String userRole;
+     private String userPassword;
+     private String userName;
+     private Set<Lock> locks = new HashSet<Lock>(0);
+     /*private List<Lock> locks = new ArrayList<Lock>(0);*/
+     
+    public User() {}
 
-	public User(){}
+    public User(String userMail, String userPassword, String userName) {
+        this.userMail = userMail;
+        this.userPassword = userPassword;
+        this.userName = userName;
+    }
+    
+    public User(String userMail, String userRole, String userPassword, String userName, Set<Lock> locks) {
+       this.userMail = userMail;
+       this.userRole = userRole;
+       this.userPassword = userPassword;
+       this.userName = userName;
+       this.locks = locks;
+    }
+    
+    @Id @GeneratedValue(strategy=IDENTITY)
+    @Column(name="id_user", unique=true, nullable=false)
+    public Integer getIdUser() {
+        return this.idUser;
+    }
+    
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
+    }
 
-	public User( String user_mail, String user_name, String user_password) {
-		super();
-		this.user_name = user_name;
-		this.user_password = user_password;
-		this.user_mail = user_mail;
-	}
-	
-	public int getId_user() {
-		return id_user;
-	}
+    @Column(name="user_mail", unique=true, nullable=false, length=45)
+    public String getUserMail() {
+        return this.userMail;
+    }
+    
+    public void setUserMail(String userMail) {
+        this.userMail = userMail;
+    }
 
-	public void setId_user(int id_user) {
-		this.id_user = id_user;
-	}
+    @Column(name="user_role", length=5)
+    public String getUserRole() {
+        return this.userRole;
+    }
+    
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
 
-	public String getUser_name() {
-		return user_name;
-	}
+    @Column(name="user_password", nullable=false, length=30)
+    public String getUserPassword() {
+        return this.userPassword;
+    }
+    
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+    
+    @Column(name="user_name", nullable=false, length=15)
+    public String getUserName() {
+        return this.userName;
+    }
+    
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
-	}
-
-	public String getUser_password() {
-		return user_password;
-	}
-
-	public void setUser_password(String user_password) {
-		this.user_password = user_password;
-	}
-
-	public String getUser_mail() {
-		return user_mail;
-	}
-
-	public void setUser_mail(String user_mail) {
-		this.user_mail = user_mail;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id_user;
-		result = prime * result + ((user_mail == null) ? 0 : user_mail.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (id_user != other.id_user)
-			return false;
-		if (user_mail == null) {
-			if (other.user_mail != null)
-				return false;
-		} else if (!user_mail.equals(other.user_mail))
-			return false;
-		return true;
-	}
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="user")
+    public Set<Lock> getLocks() {
+        return this.locks;
+    }
+    
+    public void setLocks(Set<Lock> locks) {
+        this.locks = locks;
+    }
 }
+
+

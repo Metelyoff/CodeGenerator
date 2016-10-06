@@ -20,7 +20,7 @@ public class RegisterServlet extends HttpServlet {
 		String userName = request.getParameter("userLoginName");
 		String userMail = request.getParameter("userLoginMail");
 		String password = request.getParameter("userLoginpassword");
-		User user = new User(userMail, userName, password);
+		User user = new User(userMail, password, userName);
 
 		try {
 			UserService registerService = new UserService();

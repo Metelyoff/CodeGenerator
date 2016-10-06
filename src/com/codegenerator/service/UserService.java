@@ -1,19 +1,19 @@
 package com.codegenerator.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import com.codegenerator.hibernate.util.HibernateUtil;
-import com.codegenerator.model.User;
 import com.codegenerator.model.Lock;
+import com.codegenerator.model.User;
 
 public class UserService {
 	 
 	public boolean authenticateUser(String userMail, String password) {
 		User user = getUserByMail(userMail);
-		if (user != null && user.getUser_mail().equals(userMail) && user.getUser_password().equals(password)) {
+		if (user != null && user.getUserMail().equals(userMail) && user.getUserPassword().equals(password)) {
 			return true;
 		} else {
 			return false;
@@ -27,8 +27,8 @@ public class UserService {
 		try {
 			tx = session.getTransaction();
 			tx.begin();
-			Query<User> query = session.createQuery("from User where id_user='" + userId + "'");
-			user = query.uniqueResult();
+			Query query = session.createQuery("from User where id_user='" + userId + "'");
+			user = (User) query.uniqueResult();
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null) {
@@ -48,8 +48,8 @@ public class UserService {
 		try {
 			tx = session.getTransaction();
 			tx.begin();//
-			Query<User> query = session.createQuery("from User where user_mail='" + userMail + "'");
-			user = query.uniqueResult();
+			Query query = session.createQuery("from User where user_mail='" + userMail + "'");
+			user = (User) query.uniqueResult();
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null) {
@@ -62,7 +62,7 @@ public class UserService {
 		return user;
 	}
 
-	public List<User> getAllUsers() {
+	/*public List<User> getAllUsers() {
 		List<User> list = new ArrayList<User>();
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
@@ -80,7 +80,7 @@ public class UserService {
 			session.close();
 		}
 		return list;
-	}
+	}*/
 	
 	public boolean addUser(User user) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -111,8 +111,8 @@ public class UserService {
 		try {
 			tx = session.getTransaction();
 			tx.begin();
-			Query<User> query = session.createQuery("from User where id_user='" + user.getId_user() + "'");
-			User u = query.uniqueResult();
+			Query query = session.createQuery("from User where id_user='" + user.getIdUser() + "'");
+			User u = (User) query.uniqueResult();
 			tx.commit();
 			if (u != null)
 				result = true;
@@ -127,6 +127,7 @@ public class UserService {
 	}
 	
 	public boolean deleteUser(User user) {
+		LockService ls=new LockService();
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		if (!isUserExists(user))
 			return false;
@@ -134,13 +135,13 @@ public class UserService {
 		try {
 			tx = session.getTransaction();
 			tx.begin();
-			Query<User> query = session.createQuery("from User where id_user='" + user.getId_user() + "'");
-			/*User u = (User) query.uniqueResult();*/
-			/*ArrayList<Lock> locks=u.getLocks();*/
+			Query query = session.createQuery("from User where id_user='" + user.getIdUser() + "'");
+			user = (User) query.uniqueResult();
+			Set<Lock> locks=user.getLocks();
+			for(Lock lock:locks){
+				ls.deleteLock(lock);
+			}
 			session.delete(user);
-			/*for(Lock lock:locks){
-				session.delete(lock);
-			}*/
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null) {

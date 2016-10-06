@@ -16,6 +16,23 @@
 		<servlet-name>UpdateUserServlet</servlet-name>
 		<servlet-class>com.codegenerator.controller.UpdateUserServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<display-name>UpdateAdminUserServlet</display-name>
+		<servlet-name>UpdateAdminUserServlet</servlet-name>
+		<servlet-class>com.codegenerator.controller.UpdateAdminUserServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<display-name>AddLockServlet</display-name>
+		<servlet-name>AddLockServlet</servlet-name>
+		<servlet-class>com.codegenerator.controller.AddLockServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<display-name>GenerateCodeServlet</display-name>
+		<servlet-name>GenerateCodeServlet</servlet-name>
+		<servlet-class>com.codegenerator.controller.GenerateCodeServlet</servlet-class>
+	</servlet>
+	
+	
 	<servlet-mapping>
 		<servlet-name>LoginServlet</servlet-name>
 		<url-pattern>/LoginServlet</url-pattern>
@@ -28,6 +45,19 @@
 		<servlet-name>UpdateUserServlet</servlet-name>
 		<url-pattern>/UpdateUserServlet</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UpdateAdminUserServlet</servlet-name>
+		<url-pattern>/admin/UpdateAdminUserServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AddLockServlet</servlet-name>
+		<url-pattern>/admin/AddLockServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>GenerateCodeServlet</servlet-name>
+		<url-pattern>/admin/GenerateCodeServlet</url-pattern>
+	</servlet-mapping>
+	
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

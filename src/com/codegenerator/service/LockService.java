@@ -1,7 +1,12 @@
 package com.codegenerator.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,7 +16,7 @@ import com.codegenerator.model.User;
 import com.codegenerator.model.Lock;
 
 public class LockService {
-
+	
 	public Lock getLockById(String lockId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
@@ -58,9 +63,9 @@ public class LockService {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try {
-			tx = session.getTransaction();
-			tx.begin();//from Cat cat,Owner owner where cat.OwnerId = owner.Id and owner.Name='
-			list = (List<Lock>)session.createQuery("select l from Lock as l inner join l.user as user where user.id_user='"+user.getId_user()+"'").list();
+			tx = session.beginTransaction();
+			Query q=session.createQuery("from Lock as lock where lock.user.idUser='"+user.getIdUser()+"'");
+			list = (List<Lock>)q.list();
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null) {
@@ -72,13 +77,52 @@ public class LockService {
 		}
 		return list;
 	}
-	 
-	public void addLock(Lock lock) {
+	
+	/*public boolean isLockExists(Lock lock) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
-		session.save(lock);
-		/*User user = (User) session.get(User.class, userId);
-		user.getLocks().add(lock);
-		session.save(user);*/
+		boolean result = false;
+		Transaction tx = null;
+		try {
+			tx = session.getTransaction();
+			tx.begin();
+			Query query = session.createQuery("from Lock as lock where lock.id.idLock='" + lock.getId().getIdLock() + "'");
+			Lock l = (Lock) query.uniqueResult();
+			tx.commit();
+			if (l != null)
+				result = true;
+		} catch (Exception ex) {
+			if (tx != null) {
+				tx.rollback();
+			}
+		} finally {
+			session.close();
+		}
+		return result;
+	}*/
+	
+	public boolean addLock(Lock lock,Integer idUser) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		if (isLockExists(lock))
+			return false;
+
+		Transaction tx = null;
+		try {
+			tx = session.getTransaction();
+			tx.begin();
+			session.save(lock);
+			User existingUser=(User)session. get(User.class, idUser);
+			existingUser.getLocks().add(lock);
+			session.save(existingUser);
+			tx.commit();
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return true;
 	}
 	
 	public boolean isLockExists(Lock lock) {
@@ -88,7 +132,7 @@ public class LockService {
 		try {
 			tx = session.getTransaction();
 			tx.begin();
-			Query query = session.createQuery("from Lock where id_lock='" + lock.getId_lock() + "'");
+			Query query = session.createQuery("from Lock where id_lock='" + lock.getId().getIdLock() + "'");
 			Lock l = (Lock) query.uniqueResult();
 			tx.commit();
 			if (l != null)

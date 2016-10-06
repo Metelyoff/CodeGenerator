@@ -1,118 +1,131 @@
 package com.codegenerator.model;
 
-import java.io.Serializable;
+import static javax.persistence.GenerationType.IDENTITY;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
-public class Lock implements Serializable{
+/*@IdClass(LockId.class)*/
+@Table(name="lock",catalog="codegenerator")
+public class Lock  implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	@Id @GeneratedValue
-	private int id_lock;
-	private String lock_name;
-	private int lock_cells;
-	private int lock_range;
-	private String lock_key;
-	
-	@ManyToOne
-    @JoinColumn(name="id_user")
-	private User user;
+	/*@Id @GeneratedValue()
+	private Integer id_lock;*/
+    private LockId id;
+    private User user;
+    private String lockName;
+    private int lockCells;
+    private int lockRange;
+    private String lockKey;
 
-	Lock() {}
+    public Lock() {}
 
-	Lock(String name,int numberOfCells, int rangeOfValues, User user){
-		this.lock_cells=numberOfCells;
-		this.lock_range=rangeOfValues;
-		this.lock_name=name;
-		this.user=user;
-	}
-	
-	public int getId_lock() {
-		return id_lock;
-	}
+    public Lock(String lockName, int lockCells, int lockRange) {
+        this.lockName = lockName;
+        this.lockCells = lockCells;
+        this.lockRange = lockRange;
+    }
+    
+    public Lock(User user, String lockName, int lockCells, int lockRange) {
+        this.user = user;
+        this.lockName = lockName;
+        this.lockCells = lockCells;
+        this.lockRange = lockRange;
+    }
+    
+    public Lock(User user, String lockName, int lockCells, int lockRange, String lockKey) {
+        this.user = user;
+        this.lockName = lockName;
+        this.lockCells = lockCells;
+        this.lockRange = lockRange;
+        this.lockKey = lockKey;
+    }
+    
+    public Lock(LockId id, User user, String lockName, int lockCells, int lockRange, String lockKey) {
+       this.id = id;
+       this.user = user;
+       this.lockName = lockName;
+       this.lockCells = lockCells;
+       this.lockRange = lockRange;
+       this.lockKey = lockKey;
+    }
+    
+    public Lock(LockId id, User user, String lockName, int lockCells, int lockRange) {
+        this.id = id;
+        this.user = user;
+        this.lockName = lockName;
+        this.lockCells = lockCells;
+        this.lockRange = lockRange;
+     }   
+    
+    @EmbeddedId 
+    @AttributeOverrides( {
+        @AttributeOverride(name="idLock", column=@Column(name="id_lock", nullable=false)), 
+        @AttributeOverride(name="userIdUser", column=@Column(name="user_id_user", nullable=false) ) } )
+    public LockId getId() {
+        return this.id;
+    }
+    
+    public void setId(LockId id) {
+        this.id = id;
+    }
 
-	public void setId_lock(int id_lock) {
-		this.id_lock = id_lock;
-	}
-	
-	public User getUser() {
-		return user;
-	}
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id_user", nullable=false, insertable=false, updatable=false)
+    public User getUser() {
+        return this.user;
+    }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    @Column(name="lock_name", nullable=false, length=15)
+    public String getLockName() {
+        return this.lockName;
+    }
+    
+    public void setLockName(String lockName) {
+        this.lockName = lockName;
+    }
 
-	public String getLock_name() {
-		return lock_name;
-	}
+    @Column(name="lock_cells", nullable=false)
+    public int getLockCells() {
+        return this.lockCells;
+    }
+    
+    public void setLockCells(int lockCells) {
+        this.lockCells = lockCells;
+    }
 
-	public void setLock_name(String lock_name) {
-		this.lock_name = lock_name;
-	}
+    @Column(name="lock_range", nullable=false)
+    public int getLockRange() {
+        return this.lockRange;
+    }
+    
+    public void setLockRange(int lockRange) {
+        this.lockRange = lockRange;
+    }
 
-	public int getLock_cells() {
-		return lock_cells;
-	}
-
-	public void setLock_cells(int lock_cells) {
-		this.lock_cells = lock_cells;
-	}
-
-	public int getLock_range() {
-		return lock_range;
-	}
-
-	public void setLock_range(int lock_range) {
-		this.lock_range = lock_range;
-	}
-
-	public String getLock_key() {
-		return lock_key;
-	}
-
-	public void setLock_key(String lock_key) {
-		this.lock_key = lock_key;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id_lock;
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Lock other = (Lock) obj;
-		if (id_lock != other.id_lock)
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
-		return true;
-	}
-	
-	public String toString()
-	{
-		return "Lock name is "+lock_name+
-		", number of cells="+lock_cells+
-		", number of range="+lock_range+
-		", key is "+lock_key;
-	}
+    @Column(name="lock_key", length=10)
+    public String getLockKey() {
+        return this.lockKey;
+    }
+    
+    public void setLockKey(String lockKey) {
+        this.lockKey = lockKey;
+    }
 }
+
+
