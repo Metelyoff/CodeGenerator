@@ -10,15 +10,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.codegenerator.service.CodeGenerator;
+import com.codegenerator.model.CodeGenerator;
+import com.codegenerator.model.LockKey;
+import com.codegenerator.model.LockKeyId;
+import com.codegenerator.service.KeyService;
 import com.codegenerator.service.LockService;
-import com.codegenerator.model.Lock;
+import com.codegenerator.model.UserLock;
 
 public class GenerateCodeServlet extends HttpServlet{
 
 	private static final long serialVersionUID = -6483533922317245248L;
-	
-	public static HashMap<Integer,CodeGenerator> codeGenerator=new HashMap<Integer,CodeGenerator>();
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -27,32 +28,28 @@ public class GenerateCodeServlet extends HttpServlet{
 		String generate=request.getParameter("generateButton");
 		
 		LockService ls=new LockService();
-		Lock lock=ls.getLockById(lockId);
-		addLockToCodeGenerator(lock);
-		CodeGenerator keyForLock=getCodeGeneratorByLockId(lock);
-		String resultKey=keyForLock.generateKey();
+		KeyService ks=new KeyService();
 		
-		if(generate.equals("generate")){
-			response.sendRedirect("view_user_lock_keys.jsp?userId="+userId+"&lockId="+lockId+"&key="+resultKey+"&size="+keyForLock.getList().size());
+		UserLock lock=ls.getLockById(lockId);
+		
+		CodeGenerator cg=new CodeGenerator(lock);
+		
+		LockKeyId keyId=new LockKeyId();
+		keyId.setLockIdLock(lock.getId().getIdLock());
+		keyId.setLockUserIdUser(lock.getUser().getIdUser());
+		
+		String keyResult=cg.generateKey();
+		LockKey key=new LockKey(keyId,lock,keyResult);
+		boolean addResult=ks.addKeyByLockId(key, lock);
+		
+		if(addResult){
+			if(generate.equals("generate")){
+				response.sendRedirect("view_user_lock_keys.jsp?userId="+userId+"&lockId="+lockId+"&key="+key.getKeyCode());
+			}else{
+				response.sendRedirect("error-lock.html");
+			}
 		}else{
 			response.sendRedirect("error-lock.html");
 		}
-	}
-	
-	public void addLockToCodeGenerator(Lock lock){
-		codeGenerator.put(lock.getId().getIdLock(), new CodeGenerator(lock));
-	}
-	
-	public CodeGenerator getCodeGeneratorByLockId(Lock lock){
-		Integer idLock=lock.getId().getIdLock();
-		CodeGenerator result=null;
-		for(Entry<Integer, CodeGenerator> entry : codeGenerator.entrySet()) {
-		    if(idLock.equals(entry.getKey())){
-		    	result=entry.getValue();
-		    }else{
-		    	result=null;
-		    }
-		}
-		return result;
 	}
 }

@@ -1,11 +1,10 @@
 <%@page import="java.util.List"%>
 <%@page import="com.codegenerator.service.UserService"%>
-<%@page import="com.codegenerator.service.AdminService"%>
 <%@page import="com.codegenerator.service.LockService"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.codegenerator.model.User"%>
-<%@page import="com.codegenerator.model.Lock"%>
+<%@page import="com.codegenerator.model.UserLock"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -22,12 +21,12 @@
 				response.sendRedirect("../index.jsp");
 			}else{
 				LockService ls=new LockService();
-				List<Lock> lockList = ls.getLocksByUser(currentUser);
-				AdminService as = new AdminService();
+				List<UserLock> lockListOfCurrentUser = ls.getLocksByUser(currentUser);
+				UserService us = new UserService();
 				String userId = request.getParameter("userId");
-				User user = as.getAdminUserById(userId);
-				List<User> userList = as.getAllUsers();
-				List<User> notAdminUserList = as.getAllNotAdminUsers();
+				User user = us.getUserById(userId);
+				List<User> allUserList = us.getAllUsers();
+				List<User> notAdminUserList = us.getAllNotAdminUsers();
 				
 				SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
 			%>
@@ -36,22 +35,21 @@
 		        <li>
 		        	<a href="admin_home_page.jsp"><%=currentUser.getUserName()%></a>
 		        	<ul class="sub-menu">
-		        		<li><a href="add_lock_to_current_user.jsp?userId=<%=currentUser.getIdUser()%>">Add Lock</a></li>
-                    	<%-- <li><a href="view_current_user_locks.jsp?userId=<%=currentUser.getIdUser()%>">View locks</a></li> --%>
+		        		<li><a href="add_lock_to_user.jsp?userId=<%=currentUser.getIdUser()%>">Add Lock</a></li>
                     	<li><a href="view_user_locks.jsp?userId=<%=currentUser.getIdUser()%>">View locks</a></li>
-                    	<li><a href="update_current_user.jsp?userId=<%=currentUser.getIdUser()%>">Update profile</a></li>
-                    	<li><a href="delete_current_user.jsp?userId=<%=currentUser.getIdUser()%>" onclick="return confirm('Are you sure you want to delete your profile?');">Delete profile</a></li>
+                    	<li><a href="update_user.jsp?userId=<%=currentUser.getIdUser()%>">Update profile</a></li>
+                    	<li><a href="delete_user.jsp?userId=<%=currentUser.getIdUser()%>" onclick="return confirm('Are you sure you want to delete your profile?');">Delete profile</a></li>
                     	<li><a href="logout.jsp">Logout</a></li>
                 	</ul>
 		        </li>
 		        <li>
-		        	<a href="admin_home_page.jsp">Users(<%=userList.size()%>)</a>
+		        	<a href="admin_home_page.jsp">Users(<%=allUserList.size()%>)</a>
 		        	<ul class="sub-menu">
                     	<li><a href="get-all-admin-users.jsp">Get all admin users</a></li>
                     	<li><a href="get-all-not-admin-users.jsp">Get all users</a></li>
                 	</ul>
 		        </li>
-		        <li><a href="view_user_locks.jsp?userId=<%=currentUser.getIdUser()%>">Locks(<%=lockList.size()%>)</a></li>
+		        <li><a href="view_user_locks.jsp?userId=<%=currentUser.getIdUser()%>">Locks(<%=lockListOfCurrentUser.size()%>)</a></li>
 		        <li><a href="logout.jsp">Logout</a></li>
 		    </ul>
 		</nav>

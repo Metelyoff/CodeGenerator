@@ -1,83 +1,61 @@
 package com.codegenerator.model;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-/*@IdClass(LockId.class)*/
-@Table(name="lock",catalog="codegenerator")
-public class Lock  implements java.io.Serializable {
+@Table(name="user_lock",catalog="codegenerator")
+public class UserLock  implements java.io.Serializable {
 
-	/*@Id @GeneratedValue()
-	private Integer id_lock;*/
-    private LockId id;
+	private static final long serialVersionUID = 3861996699522142015L;
+	
+	private UserLockId id;
     private User user;
     private String lockName;
     private int lockCells;
     private int lockRange;
     private String lockKey;
+    private Set<LockKey> lockKeys = new HashSet<LockKey>(0);
 
-    public Lock() {}
+    public UserLock() {}
 
-    public Lock(String lockName, int lockCells, int lockRange) {
-        this.lockName = lockName;
-        this.lockCells = lockCells;
-        this.lockRange = lockRange;
-    }
-    
-    public Lock(User user, String lockName, int lockCells, int lockRange) {
+    public UserLock(UserLockId id, User user, String lockName, int lockCells, int lockRange) {
+        this.id = id;
         this.user = user;
         this.lockName = lockName;
         this.lockCells = lockCells;
         this.lockRange = lockRange;
     }
     
-    public Lock(User user, String lockName, int lockCells, int lockRange, String lockKey) {
-        this.user = user;
-        this.lockName = lockName;
-        this.lockCells = lockCells;
-        this.lockRange = lockRange;
-        this.lockKey = lockKey;
-    }
-    
-    public Lock(LockId id, User user, String lockName, int lockCells, int lockRange, String lockKey) {
+    public UserLock(UserLockId id, User user, String lockName, int lockCells, int lockRange, String lockKey, Set<LockKey> lockKeys) {
        this.id = id;
        this.user = user;
        this.lockName = lockName;
        this.lockCells = lockCells;
        this.lockRange = lockRange;
        this.lockKey = lockKey;
+       this.lockKeys = lockKeys;
     }
-    
-    public Lock(LockId id, User user, String lockName, int lockCells, int lockRange) {
-        this.id = id;
-        this.user = user;
-        this.lockName = lockName;
-        this.lockCells = lockCells;
-        this.lockRange = lockRange;
-     }   
-    
-    @EmbeddedId 
+   
+    @EmbeddedId
     @AttributeOverrides( {
-        @AttributeOverride(name="idLock", column=@Column(name="id_lock", nullable=false)), 
+        @AttributeOverride(name="idLock", column=@Column(name="id_lock", nullable=false) ), 
         @AttributeOverride(name="userIdUser", column=@Column(name="user_id_user", nullable=false) ) } )
-    public LockId getId() {
+    public UserLockId getId() {
         return this.id;
     }
     
-    public void setId(LockId id) {
+    public void setId(UserLockId id) {
         this.id = id;
     }
 
@@ -125,6 +103,15 @@ public class Lock  implements java.io.Serializable {
     
     public void setLockKey(String lockKey) {
         this.lockKey = lockKey;
+    }
+
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="userLock")
+    public Set<LockKey> getLockKeys() {
+        return this.lockKeys;
+    }
+    
+    public void setLockKeys(Set<LockKey> lockKeys) {
+        this.lockKeys = lockKeys;
     }
 }
 

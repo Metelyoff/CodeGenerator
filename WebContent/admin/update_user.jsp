@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="com.codegenerator.service.AdminService"%>
+<%@page import="com.codegenerator.service.UserService"%>
 <%@page import="com.codegenerator.service.LockService"%>
+<%@page import="com.codegenerator.service.RoleService"%>
 <%@page import="com.codegenerator.model.User"%>
-<%@page import="com.codegenerator.model.Lock"%>
+<%@page import="com.codegenerator.model.UserLock"%>
 <%@page import="java.util.List"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -19,34 +20,35 @@
 		if(currentUser==null){
 			response.sendRedirect("../index.jsp");
 		}else{			
-			AdminService as=new AdminService();
+			UserService us=new UserService();
 			String userId = request.getParameter("userId");
-			User user = as.getAdminUserById(userId);
+			User user = us.getUserById(userId);
 			LockService ls=new LockService();
-			List<User> userList = as.getAllUsers();
-			List<Lock> currentUserList = ls.getLocksByUser(currentUser);
+			List<UserLock> lockListOfCurrentUser = ls.getLocksByUser(currentUser);
+			List<User> allUserList = us.getAllUsers();
+			List<UserLock> currentUserList = ls.getLocksByUser(currentUser);
+			RoleService rs=new RoleService();
 		%>
 		<nav>
 		    <ul class="main-menu">
 		        <li>
 		        	<a href="admin_home_page.jsp"><%=currentUser.getUserName()%></a>
 		        	<ul class="sub-menu">
-		        		<li><a href="add_lock_to_current_user.jsp?userId=<%=currentUser.getIdUser()%>">Add Lock</a></li>
-                    	<%-- <li><a href="view_current_user_locks.jsp?userId=<%=currentUser.getIdUser()%>">View locks</a></li> --%>
+		        		<li><a href="add_lock_to_user.jsp?userId=<%=currentUser.getIdUser()%>">Add Lock</a></li>
                     	<li><a href="view_user_locks.jsp?userId=<%=currentUser.getIdUser()%>">View locks</a></li>
-                    	<li><a href="update_current_user.jsp?userId=<%=currentUser.getIdUser()%>">Update profile</a></li>
-                    	<li><a href="delete_current_user.jsp?userId=<%=currentUser.getIdUser()%>" onclick="return confirm('Are you sure you want to delete your profile?');">Delete profile</a></li>
+                    	<li><a href="update_user.jsp?userId=<%=currentUser.getIdUser()%>">Update profile</a></li>
+                    	<li><a href="delete_user.jsp?userId=<%=currentUser.getIdUser()%>" onclick="return confirm('Are you sure you want to delete your profile?');">Delete profile</a></li>
                     	<li><a href="logout.jsp">Logout</a></li>
                 	</ul>
 		        </li>
 		        <li>
-		        	<a href="admin_home_page.jsp">Users(<%=userList.size()%>)</a>
+		        	<a href="admin_home_page.jsp">Users(<%=allUserList.size()%>)</a>
 		        	<ul class="sub-menu">
                     	<li><a href="get-all-admin-users.jsp">Get all admin users</a></li>
                     	<li><a href="get-all-not-admin-users.jsp">Get all users</a></li>
                 	</ul>
 		        </li>
-		        <li><a href="view_user_locks.jsp?userId=<%=currentUser.getIdUser()%>">Locks(<%=currentUserList.size()%>)</a></li>
+		        <li><a href="view_user_locks.jsp?userId=<%=currentUser.getIdUser()%>">Locks(<%=lockListOfCurrentUser.size()%>)</a></li>
 		        <li><a href="logout.jsp">Logout</a></li>
 		    </ul>
 		</nav>
@@ -58,7 +60,10 @@
 				<input type="hidden" name="id" value="<%=user.getIdUser()%>"/>
 				<input name="userName" type="text" title="Enter your name" value="<%=user.getUserName()%>" size="15" maxlength="15" placeholder="Name" required/>     
 				<input name="userMail" type="text" title="Enter your mail" value="<%=user.getUserMail()%>" size="45" maxlength="45" placeholder="Mail" required/>
-				<input name="userRole" type="text" title="Enter user role" value="<%=user.getUserRole()%>" size="5" maxlength="5" placeholder="Role" required/>  
+				<select name="userRole">
+					<option selected value="<%=rs.getUserRoleIDByUser(user)%>"><%=rs.getUserRoleNameByUser(user)%></option>
+					<option value="<%=rs.getOtherUserRoleIDByUser(user)%>"><%=rs.getOtherUserRoleNameByUser(user)%></option>
+				</select>
 				<input id="txtuserLoginpassword" name="password" type="password" title="Enter your password" size="30" maxlength="30" placeholder="Password" required/>  
 				<input id="txtuserLoginpasswordConfirm" onChange="checkPasswordMatch();" name="password" type="password" title="Confirm your password" size="30" maxlength="30" placeholder="Confirm your password" required/>    
 				<div id="divCheckPasswordMatch" class="confirm-password"></div>

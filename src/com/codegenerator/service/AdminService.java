@@ -1,4 +1,4 @@
-package com.codegenerator.service;
+/*package com.codegenerator.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,3 +233,4 @@ public class AdminService {
 		return true;
 	}
 }
+*/

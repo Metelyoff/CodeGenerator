@@ -1,4 +1,4 @@
-package com.codegenerator.service;
+/*package com.codegenerator.service;
 
 import java.util.*;
 
@@ -108,4 +108,4 @@ public class CodeGenerator
 	public ArrayList<String> getList(){
 		return keysNumber;
 	}
-}
+}*/

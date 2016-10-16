@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.codegenerator.model.User;
-import com.codegenerator.model.Lock;
-import com.codegenerator.model.LockId;
-import com.codegenerator.service.AdminService;
+import com.codegenerator.model.UserLock;
+import com.codegenerator.model.UserLockId;
 import com.codegenerator.service.LockService;
+import com.codegenerator.service.UserService;
 
 public class AddLockServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,18 +26,24 @@ public class AddLockServlet extends HttpServlet {
 		int intUserCell=Integer.parseInt(userCell);
 		int intUserRange=Integer.parseInt(userRange);
 		
-		AdminService as=new AdminService();
+		UserService us=new UserService();
 		LockService ls=new LockService();
 		
-		User user=as.getAdminUserById(userId);
-		LockId lockId=new LockId();
+		User user=us.getUserById(userId);
+		UserLockId lockId=new UserLockId();
 		lockId.setUserIdUser(user.getIdUser());
-		Lock lock=new Lock(lockId,user,userLockName,intUserCell,intUserRange);
+		UserLock lock=new UserLock(lockId,user,userLockName,intUserCell,intUserRange);
 		
 		boolean addResult=ls.addLock(lock,user.getIdUser());
 		
 		if(addResult){
-			response.sendRedirect("view_user_locks.jsp?userId="+user.getIdUser());
+			if(us.isAdminRole(user)){
+				response.sendRedirect("view_user_locks.jsp?userId="+user.getIdUser());
+			}else{
+				response.sendRedirect("../user_home_page.jsp");
+			}
+		}else{
+			response.sendRedirect("error-lock.html");
 		}
 	}
 }

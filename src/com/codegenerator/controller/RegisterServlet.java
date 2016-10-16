@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.codegenerator.model.User;
+import com.codegenerator.model.UserRole;
 import com.codegenerator.service.UserService;
 
 public class RegisterServlet extends HttpServlet {
@@ -20,29 +21,36 @@ public class RegisterServlet extends HttpServlet {
 		String userName = request.getParameter("userLoginName");
 		String userMail = request.getParameter("userLoginMail");
 		String password = request.getParameter("userLoginpassword");
-		User user = new User(userMail, password, userName);
-
-		try {
-			UserService registerService = new UserService();
-			boolean result = registerService.addUser(user);
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Registration Successful</title>");
-			out.println("</head>");
-			out.println("<body>");
-			out.println("<center>");
-			if (result) {
-				out.println("<h1>Thanks for Registering with us :</h1>");
-				out.println("To login with new UserId and Password<a href=index.jsp>Click here</a>");
-			} else {
-				out.println("<h1>Registration Failed</h1>");
-				out.println("To try again<a href=signup.jsp>Click here</a>");
+		
+		UserService userService = new UserService();
+		if(userService.isUserExistsByMail(userMail)){
+			response.sendRedirect("user_is_exist_error.html");
+		}else{
+			UserRole urUser=new UserRole();
+			urUser.setIdUserRole(2);
+			User user = new User(urUser,userMail, password, userName);
+			try {
+				boolean result = userService.addUser(user);
+				out.println("<html>");
+				out.println("<head>");
+				out.println("<title>Registration Successful</title>");
+				out.println("<link type='text/css' rel='stylesheet' href='css/admin.css' />");
+				out.println("</head>");
+				out.println("<body>");
+				out.println("<center>");
+				if (result) {
+					out.println("<h1>Thanks for Registering with us :</h1>");
+					out.println("<h1>To login <a href=index.jsp>Click here</a></h1>");
+				} else {
+					out.println("<h1>Registration Failed</h1>");
+					out.println("<h1>To try again<a href=signup.jsp>Click here</a></h1>");
+				}
+				out.println("</center>");
+				out.println("</body>");
+				out.println("</html>");
+			} finally {
+				out.close();
 			}
-			out.println("</center>");
-			out.println("</body>");
-			out.println("</html>");
-		} finally {
-			out.close();
 		}
 	}
 }

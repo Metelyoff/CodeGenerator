@@ -1,26 +1,23 @@
 package com.codegenerator.model;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 @Embeddable
-public class LockId  implements java.io.Serializable {
+public class UserLockId  implements java.io.Serializable {
+
+	private static final long serialVersionUID = -7339678675604348793L;
 	
-     private int idLock;
-     private int userIdUser;
+	private int idLock;
+    private int userIdUser;
 
-    public LockId() {
-    }
+    public UserLockId() {}
 
-    public LockId(int idLock, int userIdUser) {
+    public UserLockId(int idLock, int userIdUser) {
        this.idLock = idLock;
        this.userIdUser = userIdUser;
     }
-   
+
     @Column(name="id_lock", nullable=false)
     public int getIdLock() {
         return this.idLock;
@@ -30,22 +27,20 @@ public class LockId  implements java.io.Serializable {
         this.idLock = idLock;
     }
 
-
     @Column(name="user_id_user", nullable=false)
     public int getUserIdUser() {
         return this.userIdUser;
     }
     
-    public void setUserIdUser(Integer userIdUser) {
+    public void setUserIdUser(int userIdUser) {
         this.userIdUser = userIdUser;
     }
-
 
    public boolean equals(Object other) {
          if ( (this == other ) ) return true;
 		 if ( (other == null ) ) return false;
-		 if ( !(other instanceof LockId) ) return false;
-		 LockId castOther = ( LockId ) other; 
+		 if ( !(other instanceof UserLockId) ) return false;
+		 UserLockId castOther = ( UserLockId ) other; 
          
 		 return (this.getIdLock()==castOther.getIdLock())
  && (this.getUserIdUser()==castOther.getUserIdUser());
@@ -57,9 +52,7 @@ public class LockId  implements java.io.Serializable {
          result = 37 * result + this.getIdLock();
          result = 37 * result + this.getUserIdUser();
          return result;
-   }   
-
-
+   }
 }
 
 

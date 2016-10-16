@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.codegenerator.model.User;
-import com.codegenerator.service.AdminService;
+import com.codegenerator.model.UserRole;
 import com.codegenerator.service.UserService;
 
 public class UpdateAdminUserServlet extends HttpServlet{
@@ -25,34 +25,20 @@ public class UpdateAdminUserServlet extends HttpServlet{
 		String userRole = request.getParameter("userRole");
 		String password = request.getParameter("password");
 		
+		int idUserRole=Integer.parseInt(userRole);
+		
+		UserService userService = new UserService();
 		try {
-			AdminService updateService = new AdminService();
-			User user=updateService.getAdminUserById(userId);
+			User user=userService.getUserById(userId);
+			UserRole ur=new UserRole();
+			ur.setIdUserRole(idUserRole);
 			user.setUserName(userName);
 			user.setUserMail(userMail);
-			user.setUserRole(userRole);
+			user.setUserRole(ur);
 			user.setUserPassword(password);
-			boolean result = updateService.editAdminUser(user);
-			/*out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Update Successful</title>");
-			out.println("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>");
-			out.println("<link type='text/css' rel='stylesheet' href='../css/admin.css'/>");
-			out.println("</head>");
-			out.println("<body>");
-			out.println("<center>");
-			if (result) {
-				out.println("<h1>Update Successful</h1>");
-				out.println("To login with new User and Password<a href=index.jsp>Click here</a>");
-			} else {
-				out.println("<h1>Registration Failed</h1>");
-				out.println("To try again<a href=signup.jsp>Click here</a>");
-			}
-			out.println("</center>");
-			out.println("</body>");
-			out.println("</html>");*/
+			boolean result = userService.editUser(user);
 			if (result == true) {
-				request.getSession().setAttribute("user", user);
+				/*request.getSession().setAttribute("user", user);*/
 				response.sendRedirect("admin_home_page.jsp");
 			} else {
 				response.sendRedirect("error.jsp");

@@ -10,8 +10,11 @@
     <property name="hibernate.show_sql">true</property>
     <property name="hbm2ddl.auto">update</property>
     <mapping class="com.codegenerator.hibernate.util.HibernateUtil"/>
-    <mapping class="com.codegenerator.model.Lock"/>
-    <mapping class="com.codegenerator.model.LockId"/>
+    <mapping class="com.codegenerator.model.UserLock"/>
+    <mapping class="com.codegenerator.model.UserLockId"/>
     <mapping class="com.codegenerator.model.User"/>
+    <mapping class="com.codegenerator.model.LockKey"/>
+    <mapping class="com.codegenerator.model.LockKeyId"/>
+    <mapping class="com.codegenerator.model.UserRole"/>
   </session-factory>
 </hibernate-configuration>

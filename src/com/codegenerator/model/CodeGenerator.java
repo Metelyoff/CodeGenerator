@@ -1,27 +1,29 @@
-/*package com.codegenerator.model;
+package com.codegenerator.model;
 import java.util.*;
 
 public class CodeGenerator
 {
-	private Lock lock;
+	private UserLock userLock;
 	private int numberOfCells;
 	private int numberOfRange;
 	private int maxSizeOfKeyNumbers;
 	private ArrayList<String> keysNumber;
 	
-	CodeGenerator(Lock newLock){
-		this.lock=newLock;
-		this.numberOfCells=lock.getNumberOfCells();
-		this.numberOfRange=lock.getNumberOfRange();
+	public CodeGenerator() {}
+	
+	public CodeGenerator(UserLock newLock){
+		this.userLock=newLock;
+		this.numberOfCells=newLock.getLockCells();
+		this.numberOfRange=newLock.getLockRange();
 		this.keysNumber=new ArrayList<String>(setMaxSizeOfKeyNumbers());
 	}
 
-	public void setLock(Lock lock){
-		this.lock = lock;
+	public void setLock(UserLock userLock){
+		this.userLock = userLock;
 	}
 
-	public Lock getLock(){
-		return lock;
+	public UserLock getLock(){
+		return userLock;
 	}
 	
 	private int setMaxSizeOfKeyNumbers() {
@@ -86,9 +88,9 @@ public class CodeGenerator
 	public void codeIsFound(String lockCode){
 		if(!isContainCode(lockCode)){
 			keysNumber.add(lockCode);
-			lock.setKey(lockCode);
+			userLock.setLockKey(lockCode);
 		}else{
-			lock.setKey(lockCode);
+			userLock.setLockKey(lockCode);
 		}
 	}
 	
@@ -104,4 +106,3 @@ public class CodeGenerator
 		return keysNumber;
 	}
 }
-*/

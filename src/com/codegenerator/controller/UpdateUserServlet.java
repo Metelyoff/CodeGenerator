@@ -30,22 +30,12 @@ public class UpdateUserServlet extends HttpServlet{
 			user.setUserMail(userMail);
 			user.setUserPassword(password);
 			boolean result = updateService.editUser(user);
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Update Successful</title>");
-			out.println("</head>");
-			out.println("<body>");
-			out.println("<center>");
-			if (result) {
-				out.println("<h1>Update Successful</h1>");
-				out.println("To login with new User and Password<a href=index.jsp>Click here</a>");
+			if (result == true) {
+				request.getSession().setAttribute("user", user);
+				response.sendRedirect("user_home_page.jsp");
 			} else {
-				out.println("<h1>Registration Failed</h1>");
-				out.println("To try again<a href=signup.jsp>Click here</a>");
+				response.sendRedirect("error.html");
 			}
-			out.println("</center>");
-			out.println("</body>");
-			out.println("</html>");
 		} finally {
 			out.close();
 		}
