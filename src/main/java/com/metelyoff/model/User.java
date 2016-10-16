@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="user",catalog="metelyoff", uniqueConstraints = @UniqueConstraint(columnNames="user_mail") )
+@Table(name="user",catalog="codegenerator", uniqueConstraints = @UniqueConstraint(columnNames="user_mail") )
 public class User  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1712925643732361692L;

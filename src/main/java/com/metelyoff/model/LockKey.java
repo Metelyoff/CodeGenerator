@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="lock_key",catalog="metelyoff")
+@Table(name="lock_key",catalog="codegenerator")
 public class LockKey  implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3253706996416499315L;

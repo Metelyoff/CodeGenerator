@@ -14,7 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="user_lock",catalog="metelyoff")
+@Table(name="user_lock",catalog="codegenerator")
 public class UserLock  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3861996699522142015L;
